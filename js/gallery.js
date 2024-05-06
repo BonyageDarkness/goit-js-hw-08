@@ -77,11 +77,20 @@ images.forEach((image) => {
     a.addEventListener('click', (event) => {
         event.preventDefault();
         console.log(event.currentTarget.href);
-        const instance = basicLightbox.create(`
+        const instance = basicLightbox.create(
+            `
         <div class="modal">
-            <img src="${img.dataset.source}" alt="${img.alt} width="1112" height="640""></img>
+            <img src="${img.dataset.source}" alt="${img.alt}" width="1112" height="640"></img>
         </div>
-    `);
+    `,
+            {
+                onShow: (instance) => {
+                    instance;
+                    instance.element().style.backgroundColor =
+                        'rgba(46, 47, 66, 0.8)';
+                },
+            }
+        );
         instance.show();
     });
 
