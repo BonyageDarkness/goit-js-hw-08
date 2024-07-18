@@ -64,59 +64,32 @@ const images = [
     },
 ];
 
-const gallery = document.querySelector('ul.gallery');
+const list = document.querySelector('.gallery');
+const markup = images
+    .map(
+        (image) => `<li class="gallery-item">
+        <a class="gallery-link" href="${image.original}">
+        <img
+        class="gallery-image"
+        src="${image.preview}"
+        data-source="${image.original}"
+        alt="${image.description}"
+        />
+    </a>
+</li>`
+    )
+    .join('');
 
-images.forEach((image) => {
-    const li = document.createElement('li');
-    li.classList.add('gallery-item');
-    li.style.listStyleType = 'none';
+list.insertAdjacentHTML('afterbegin', markup);
 
-    const a = document.createElement('a');
-    a.classList.add('gallery-link');
-    a.href = image.original;
-    a.addEventListener('click', (event) => {
-        event.preventDefault();
-        console.log(event.currentTarget.href);
-        const instance = basicLightbox.create(
-            `
-        <div class="modal">
-            <img src="${img.dataset.source}" alt="${img.alt}" width="1112" height="640"></img>
-        </div>
-    `,
-            {
-                onShow: (instance) => {
-                    instance;
-                    instance.element().style.backgroundColor =
-                        'rgba(46, 47, 66, 0.8)';
-                },
-            }
-        );
-        instance.show();
-    });
+list.addEventListener('click', selectColor);
 
-    const img = document.createElement('img');
-    img.classList.add('gallery-image');
-    img.src = image.preview;
-    img.dataset.source = image.original;
-    img.alt = image.description;
-    img.style.width = '360px';
-    img.style.height = '200px';
-    img.style.flexShrink = '0';
-    img.style.fontSize = '0';
+function selectColor(event) {
+    console.log(event.target);
+    event.preventDefault();
+    if (event.target.nodeName !== 'IMG') {
+        return;
+    }
 
-    a.appendChild(img);
-    li.appendChild(a);
-    gallery.appendChild(li);
-});
-
-gallery.style.display = 'flex';
-gallery.style.width = '1440px';
-gallery.style.height = '696px';
-gallery.style.padding = '24px 156px';
-gallery.style.flexDirection = 'row';
-gallery.style.justifyContent = 'center';
-gallery.style.alignItems = 'flex-start';
-gallery.style.gap = '24px';
-gallery.style.background = '#FFF';
-gallery.style.overflow = 'auto';
-gallery.style.flexWrap = 'wrap';
+    basicLightbox.create(`<img src="${event.target.dataset.source}" />`).show();
+}
